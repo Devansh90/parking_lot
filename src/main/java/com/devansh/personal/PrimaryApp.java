@@ -3,7 +3,9 @@ package com.devansh.personal;
 import com.devansh.personal.constants.Constants;
 import com.devansh.personal.exception.ParkingLotException;
 import com.devansh.personal.model.ParkingSlot;
+import com.sun.deploy.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class PrimaryApp {
@@ -56,19 +58,66 @@ public class PrimaryApp {
                 break;
 
             case Constants.Commands.search_slot_by_car_number:
-                parkCar(inputScanner);
+                slotByCarNumber(inputScanner.next());
                 break;
 
             case Constants.Commands.search_car_by_colour:
-                carDeparture(inputScanner);
+                carByColour(inputScanner.next());
                 break;
 
             case Constants.Commands.search_slot_by_colour:
-                lotStatus();
+                slotByColour(inputScanner.next());
                 break;
 
             default:
+                System.out.println("Command not recognized!");
                 return;
+        }
+    }
+
+    private void slotByColour(final String carColour) {
+        if(parkingLot == null)
+            throw new ParkingLotException("Parking lot is not defined");
+
+        ArrayList<String> finalString = new ArrayList<>();
+        for (ParkingSlot parkingSlot : parkingLot) {
+            if (parkingSlot != null) {
+                if (carColour.equalsIgnoreCase(parkingSlot.getCar().getCarColour())) {
+                    finalString.add(String.valueOf(parkingSlot.getLotId()));
+                }
+            }
+        }
+
+        System.out.println(StringUtils.join(finalString, ","));
+    }
+
+    private void carByColour(final String carColour) {
+        if(parkingLot == null)
+            throw new ParkingLotException("Parking lot is not defined");
+
+        ArrayList<String> finalString = new ArrayList<>();
+        for (ParkingSlot parkingSlot : parkingLot) {
+            if (parkingSlot != null) {
+                if (carColour.equalsIgnoreCase(parkingSlot.getCar().getCarColour())) {
+                    finalString.add(parkingSlot.getCar().getCarLicenceNumber());
+                }
+            }
+        }
+
+        System.out.println(StringUtils.join(finalString, ","));
+    }
+
+    private void slotByCarNumber(final String carNumber) {
+        if(parkingLot == null)
+            throw new ParkingLotException("Parking lot is not defined");
+
+        ArrayList<String> finalString = new ArrayList<>();
+        for (ParkingSlot parkingSlot : parkingLot) {
+            if (parkingSlot != null) {
+                if (carNumber.equalsIgnoreCase(parkingSlot.getCar().getCarLicenceNumber())) {
+                    System.out.println(parkingSlot.getLotId());
+                }
+            }
         }
     }
 
@@ -91,6 +140,7 @@ public class PrimaryApp {
 
         parkingLot[exitSlotNumber] = null;
         System.out.println("Slot number " + exitSlotNumber + " is free");
+        currentSize = currentSize - 1;
     }
 
     //Create Car Parking
@@ -99,12 +149,15 @@ public class PrimaryApp {
         if (currentSize < parkingLot.length) {
             for (int i = 0; i < parkingLot.length; i++) {
                 if (parkingLot[i] == null) {
-                    parkingLot[i] = new ParkingSlot(i, car);
+                    parkingLot[i] = new ParkingSlot(i + 1, car);
                     System.out.println("Allocated slot number:" + (i + 1));
                     break;
                 }
             }
             currentSize = currentSize + 1;
+        }
+        else {
+            System.out.println("Sorry, parking lot is full");
         }
     }
 
