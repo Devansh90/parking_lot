@@ -59,6 +59,7 @@ public class PrimaryApp {
             String sCurrentLine;
             Scanner scanner;
             while ((sCurrentLine = br.readLine()) != null) {
+                //System.out.println(sCurrentLine);
                 scanner = new Scanner(sCurrentLine).useDelimiter("\\s");
                 String command = scanner.next();
                 app.executeCommand(command, scanner);
@@ -162,11 +163,11 @@ public class PrimaryApp {
         if(parkingLot == null)
             throw new ParkingLotException("Parking lot is not defined");
 
-        System.out.println("Slot No. Registration No Colour");
+        System.out.println("Slot No. \tRegistration No \tColour");
         for (ParkingSlot parkingSlot : parkingLot) {
             if (parkingSlot != null) {
-                System.out.println(parkingSlot.getLotId() + " "
-                                           + parkingSlot.getCar().getCarLicenceNumber() + " "
+                System.out.println(parkingSlot.getLotId() + "\t\t\t"
+                                           + parkingSlot.getCar().getCarLicenceNumber() + "\t\t"
                                            + parkingSlot.getCar().getCarColour());
             }
         }
