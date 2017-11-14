@@ -15,6 +15,7 @@ public class ParkingSlot {
         this.car = car;
     }
 
+    @Data
     public static class Car {
         String carLicenceNumber;
         String carColour;

@@ -72,13 +72,34 @@ public class PrimaryApp {
         }
     }
 
+    private void lotStatus() {
+        System.out.println("Slot No. Registration No Colour");
+        for (ParkingSlot parkingSlot : parkingLot) {
+            if (parkingSlot != null) {
+                System.out.println(parkingSlot.getLotId() + " "
+                                           + parkingSlot.getCar().getCarLicenceNumber() + " "
+                                           + parkingSlot.getCar().getCarColour());
+            }
+        }
+    }
+
+    private void carDeparture(final Scanner inputScanner) {
+        Integer exitSlotNumber = inputScanner.nextInt();
+        if (exitSlotNumber > parkingLot.length) throw new ParkingLotException("Cannot exit slot:" + exitSlotNumber + " as no such exist!");
+
+        if (parkingLot[exitSlotNumber] == null) throw new ParkingLotException("Cannot exit slot:" + exitSlotNumber + " as no such exist!");
+
+        parkingLot[exitSlotNumber] = null;
+        System.out.println("Slot number " + exitSlotNumber + " is free");
+    }
+
     //Create Car Parking
     private void parkCar(final Scanner inputScanner) {
         ParkingSlot.Car car = new ParkingSlot.Car(inputScanner.next(), inputScanner.next());
         if (currentSize < parkingLot.length) {
             for (int i = 0; i < parkingLot.length; i++) {
                 if (parkingLot[i] == null) {
-                    parkingLot[i] = new ParkingSlot(1, car);
+                    parkingLot[i] = new ParkingSlot(i, car);
                     System.out.println("Allocated slot number:" + (i + 1));
                     break;
                 }
