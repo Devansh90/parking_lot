@@ -39,7 +39,31 @@ public class PrimaryApp {
     private void executeCommand(final String command, final Scanner inputScanner) {
         switch (command) {
             case Constants.Commands.create_parking_lot:
-                createParkingLot(inputScanner.next());
+                createParkingLot(inputScanner);
+                break;
+
+            case Constants.Commands.park_car:
+                parkCar(inputScanner);
+                break;
+
+            case Constants.Commands.car_departure:
+                carDeparture(inputScanner);
+                break;
+
+            case Constants.Commands.lot_status:
+                lotStatus();
+                break;
+
+            case Constants.Commands.search_slot_by_car_number:
+                parkCar(inputScanner);
+                break;
+
+            case Constants.Commands.search_car_by_colour:
+                carDeparture(inputScanner);
+                break;
+
+            case Constants.Commands.search_slot_by_colour:
+                lotStatus();
                 break;
 
             default:
@@ -47,13 +71,18 @@ public class PrimaryApp {
         }
     }
 
+    //Create Car Parking
+    private void parkCar(final Scanner inputScanner) {
+        return;
+    }
+
     //Create new parking lot, throws designed exceptions
-    private void createParkingLot(final String next) {
+    private void createParkingLot(final Scanner inputScanner) {
 
         Integer slotCount = 0;
         //Read size of slots to be created
         try {
-            slotCount = Integer.parseInt(next);
+            slotCount = Integer.parseInt(inputScanner.next());
         } catch (NumberFormatException e) {
             throw new ParkingLotException("Parking lot size not defined / unrecognizable");
         }
