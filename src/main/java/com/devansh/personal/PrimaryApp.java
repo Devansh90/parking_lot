@@ -2,13 +2,14 @@ package com.devansh.personal;
 
 import com.devansh.personal.constants.Constants;
 import com.devansh.personal.exception.ParkingLotException;
-import com.devansh.personal.model.ParkingLot;
+import com.devansh.personal.model.ParkingSlot;
 
 import java.util.Scanner;
 
 public class PrimaryApp {
 
-    ParkingLot[] parkingLotList;
+    ParkingSlot[] parkingLot;
+    Integer currentSize;
 
     public static void main(String args[]) {
         //Scanner
@@ -73,7 +74,17 @@ public class PrimaryApp {
 
     //Create Car Parking
     private void parkCar(final Scanner inputScanner) {
-        return;
+        ParkingSlot.Car car = new ParkingSlot.Car(inputScanner.next(), inputScanner.next());
+        if (currentSize < parkingLot.length) {
+            for (int i = 0; i < parkingLot.length; i++) {
+                if (parkingLot[i] == null) {
+                    parkingLot[i] = new ParkingSlot(1, car);
+                    System.out.println("Allocated slot number:" + (i + 1));
+                    break;
+                }
+            }
+            currentSize = currentSize + 1;
+        }
     }
 
     //Create new parking lot, throws designed exceptions
@@ -87,9 +98,10 @@ public class PrimaryApp {
             throw new ParkingLotException("Parking lot size not defined / unrecognizable");
         }
 
-        if (parkingLotList != null) throw new ParkingLotException("Parking lot is already initialized!");
+        if (parkingLot != null) throw new ParkingLotException("Parking lot is already initialized!");
 
-        parkingLotList = new ParkingLot[slotCount];
+        parkingLot = new ParkingSlot[slotCount];
+        currentSize = 0;
         System.out.println("Created a parking slot with " + slotCount + " slots");
     }
 }
