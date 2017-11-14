@@ -7,5 +7,6 @@ public class Constants {
         public static final String park_car = "park";
         public static final String car_departure = "leave";
         public static final String lot_status = "status";
+        public static final String exit = "exit";
     }
 }
