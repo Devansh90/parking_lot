@@ -5,6 +5,9 @@ import com.devansh.personal.exception.ParkingLotException;
 import com.devansh.personal.model.ParkingSlot;
 import com.sun.deploy.util.StringUtils;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -18,10 +21,19 @@ public class PrimaryApp {
         Scanner scanner = new Scanner(System.in).useDelimiter("\\s");
         PrimaryApp app = new PrimaryApp();
 
-        //TODO
         //Check if args is there & is of type file
+        if (args.length > 0) {
+            fileReaderMode(args[0],app);
+        } else {
+            commandMode(scanner, app);
+        }
 
-        //Commands
+        //Treat Message
+        //System.out.println("Thanks for using the system!");
+    }
+
+    private static void commandMode(final Scanner scanner, final PrimaryApp app) {
+        //Command Mode
         String command = scanner.next();
         while (!Constants.Commands.exit.equalsIgnoreCase(command)) {
             try {
@@ -34,8 +46,33 @@ public class PrimaryApp {
             //Get next command
             command = scanner.next();
         }
-        //Treat Message
-        System.out.println("Thanks for using the system!");
+    }
+
+    private static void fileReaderMode(final String fileName, final PrimaryApp app) {
+        //File reader mode
+        BufferedReader br = null;
+        FileReader fr = null;
+        try {
+            //br = new BufferedReader(new FileReader(FILENAME));
+            fr = new FileReader(fileName);
+            br = new BufferedReader(fr);
+            String sCurrentLine;
+            Scanner scanner;
+            while ((sCurrentLine = br.readLine()) != null) {
+                scanner = new Scanner(sCurrentLine).useDelimiter("\\s");
+                String command = scanner.next();
+                app.executeCommand(command, scanner);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (br != null) br.close();
+                if (fr != null) fr.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     //To Execute every type of command
@@ -71,7 +108,6 @@ public class PrimaryApp {
 
             default:
                 System.out.println("Command not recognized!");
-                return;
         }
     }
 
@@ -111,17 +147,21 @@ public class PrimaryApp {
         if(parkingLot == null)
             throw new ParkingLotException("Parking lot is not defined");
 
-        ArrayList<String> finalString = new ArrayList<>();
         for (ParkingSlot parkingSlot : parkingLot) {
             if (parkingSlot != null) {
                 if (carNumber.equalsIgnoreCase(parkingSlot.getCar().getCarLicenceNumber())) {
                     System.out.println(parkingSlot.getLotId());
+                    return;
                 }
             }
         }
+        System.out.println("Not found");
     }
 
     private void lotStatus() {
+        if(parkingLot == null)
+            throw new ParkingLotException("Parking lot is not defined");
+
         System.out.println("Slot No. Registration No Colour");
         for (ParkingSlot parkingSlot : parkingLot) {
             if (parkingSlot != null) {
@@ -133,6 +173,9 @@ public class PrimaryApp {
     }
 
     private void carDeparture(final Scanner inputScanner) {
+        if(parkingLot == null)
+            throw new ParkingLotException("Parking lot is not defined");
+
         Integer exitSlotNumber = inputScanner.nextInt();
         if (exitSlotNumber > parkingLot.length) throw new ParkingLotException("Cannot exit slot:" + exitSlotNumber + " as no such exist!");
 
@@ -145,6 +188,9 @@ public class PrimaryApp {
 
     //Create Car Parking
     private void parkCar(final Scanner inputScanner) {
+        if(parkingLot == null)
+            throw new ParkingLotException("Parking lot is not defined");
+
         ParkingSlot.Car car = new ParkingSlot.Car(inputScanner.next(), inputScanner.next());
         if (currentSize < parkingLot.length) {
             for (int i = 0; i < parkingLot.length; i++) {
