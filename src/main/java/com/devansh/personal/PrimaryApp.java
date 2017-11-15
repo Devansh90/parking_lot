@@ -3,7 +3,6 @@ package com.devansh.personal;
 import com.devansh.personal.constants.Constants;
 import com.devansh.personal.exception.ParkingLotException;
 import com.devansh.personal.model.ParkingSlot;
-import com.sun.deploy.util.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -78,37 +77,29 @@ public class PrimaryApp {
 
     //To Execute every type of command
     private void executeCommand(final String command, final Scanner inputScanner) {
-        switch (command) {
-            case Constants.Commands.create_parking_lot:
-                createParkingLot(inputScanner);
-                break;
+        if (command.equals(Constants.Commands.create_parking_lot)) {
+            createParkingLot(inputScanner);
 
-            case Constants.Commands.park_car:
-                parkCar(inputScanner);
-                break;
+        } else if (command.equals(Constants.Commands.park_car)) {
+            parkCar(inputScanner);
 
-            case Constants.Commands.car_departure:
-                carDeparture(inputScanner);
-                break;
+        } else if (command.equals(Constants.Commands.car_departure)) {
+            carDeparture(inputScanner);
 
-            case Constants.Commands.lot_status:
-                lotStatus();
-                break;
+        } else if (command.equals(Constants.Commands.lot_status)) {
+            lotStatus();
 
-            case Constants.Commands.search_slot_by_car_number:
-                slotByCarNumber(inputScanner.next());
-                break;
+        } else if (command.equals(Constants.Commands.search_slot_by_car_number)) {
+            slotByCarNumber(inputScanner.next());
 
-            case Constants.Commands.search_car_by_colour:
-                carByColour(inputScanner.next());
-                break;
+        } else if (command.equals(Constants.Commands.search_car_by_colour)) {
+            carByColour(inputScanner.next());
 
-            case Constants.Commands.search_slot_by_colour:
-                slotByColour(inputScanner.next());
-                break;
+        } else if (command.equals(Constants.Commands.search_slot_by_colour)) {
+            slotByColour(inputScanner.next());
 
-            default:
-                System.out.println("Command not recognized!");
+        } else {
+            System.out.println("Command not recognized!");
         }
     }
 
@@ -116,7 +107,7 @@ public class PrimaryApp {
         if(parkingLot == null)
             throw new ParkingLotException("Parking lot is not defined");
 
-        ArrayList<String> finalString = new ArrayList<>();
+        ArrayList<String> finalString = new ArrayList<String>();
         for (ParkingSlot parkingSlot : parkingLot) {
             if (parkingSlot != null) {
                 if (carColour.equalsIgnoreCase(parkingSlot.getCar().getCarColour())) {
@@ -125,14 +116,14 @@ public class PrimaryApp {
             }
         }
 
-        System.out.println(StringUtils.join(finalString, ","));
+        System.out.println(joinByDelim(finalString));
     }
 
     private void carByColour(final String carColour) {
         if(parkingLot == null)
             throw new ParkingLotException("Parking lot is not defined");
 
-        ArrayList<String> finalString = new ArrayList<>();
+        ArrayList<String> finalString = new ArrayList<String>();
         for (ParkingSlot parkingSlot : parkingLot) {
             if (parkingSlot != null) {
                 if (carColour.equalsIgnoreCase(parkingSlot.getCar().getCarColour())) {
@@ -141,7 +132,7 @@ public class PrimaryApp {
             }
         }
 
-        System.out.println(StringUtils.join(finalString, ","));
+        System.out.println(joinByDelim(finalString));
     }
 
     private void slotByCarNumber(final String carNumber) {
@@ -163,11 +154,11 @@ public class PrimaryApp {
         if(parkingLot == null)
             throw new ParkingLotException("Parking lot is not defined");
 
-        System.out.println("Slot No. \tRegistration No \tColour");
+        System.out.println("Slot No. \tRegistration No Colour");
         for (ParkingSlot parkingSlot : parkingLot) {
             if (parkingSlot != null) {
-                System.out.println(parkingSlot.getLotId() + "\t\t\t"
-                                           + parkingSlot.getCar().getCarLicenceNumber() + "\t\t"
+                System.out.println(parkingSlot.getLotId() + "\t\t"
+                                           + parkingSlot.getCar().getCarLicenceNumber() + "\t"
                                            + parkingSlot.getCar().getCarColour());
             }
         }
@@ -224,6 +215,17 @@ public class PrimaryApp {
         parkingLot = new ParkingSlot[slotCount];
         currentSize = 0;
         System.out.println("Created a parking slot with " + slotCount + " slots");
+    }
+
+    private static String joinByDelim(ArrayList<String> finalString)
+    {
+        String delim = "";
+        StringBuilder sb = new StringBuilder();
+        for (String i : finalString) {
+            sb.append(delim).append(i);
+            delim = ",";
+        }
+        return sb.toString();
     }
 }
 
